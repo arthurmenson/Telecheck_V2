@@ -5,20 +5,23 @@ import {
   StyleSheet, 
   ViewStyle, 
   TextStyle,
-  ActivityIndicator 
+  ActivityIndicator,
+  View 
 } from 'react-native';
 import { theme } from '../../theme';
 
 export interface ButtonProps {
   title: string;
   onPress: () => void;
-  variant?: 'primary' | 'secondary' | 'outline' | 'ghost';
+  variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'destructive';
   size?: 'sm' | 'md' | 'lg';
   disabled?: boolean;
   loading?: boolean;
   style?: ViewStyle;
   textStyle?: TextStyle;
   icon?: React.ReactNode;
+  iconPosition?: 'left' | 'right';
+  fullWidth?: boolean;
 }
 
 export const Button: React.FC<ButtonProps> = ({
@@ -31,12 +34,15 @@ export const Button: React.FC<ButtonProps> = ({
   style,
   textStyle,
   icon,
+  iconPosition = 'left',
+  fullWidth = false,
 }) => {
   const buttonStyle = [
     styles.base,
     styles[variant],
     styles[size],
-    disabled && styles.disabled,
+    fullWidth && styles.fullWidth,
+    (disabled || loading) && styles.disabled,
     style,
   ];
 
@@ -44,28 +50,44 @@ export const Button: React.FC<ButtonProps> = ({
     styles.text,
     styles[`${variant}Text`],
     styles[`${size}Text`],
-    disabled && styles.disabledText,
+    (disabled || loading) && styles.disabledText,
     textStyle,
   ];
+
+  const renderContent = () => {
+    if (loading) {
+      return (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator 
+            size="small" 
+            color={variant === 'primary' || variant === 'destructive' ? theme.colors.surface : theme.colors.primary} 
+          />
+          <Text style={[buttonTextStyle, styles.loadingText]}>Loading...</Text>
+        </View>
+      );
+    }
+
+    return (
+      <View style={styles.contentContainer}>
+        {icon && iconPosition === 'left' && (
+          <View style={styles.iconLeft}>{icon}</View>
+        )}
+        <Text style={buttonTextStyle}>{title}</Text>
+        {icon && iconPosition === 'right' && (
+          <View style={styles.iconRight}>{icon}</View>
+        )}
+      </View>
+    );
+  };
 
   return (
     <TouchableOpacity
       style={buttonStyle}
       onPress={onPress}
       disabled={disabled || loading}
-      activeOpacity={0.8}
+      activeOpacity={0.7}
     >
-      {loading ? (
-        <ActivityIndicator 
-          size="small" 
-          color={variant === 'primary' ? theme.colors.surface : theme.colors.primary} 
-        />
-      ) : (
-        <>
-          {icon}
-          <Text style={buttonTextStyle}>{title}</Text>
-        </>
-      )}
+      {renderContent()}
     </TouchableOpacity>
   );
 };
@@ -75,41 +97,53 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: theme.borderRadius.base,
-    paddingHorizontal: theme.spacing.lg,
-    gap: theme.spacing.sm,
+    borderRadius: theme.components.button.borderRadius,
+    borderWidth: 1,
+    borderColor: 'transparent',
+  },
+  
+  fullWidth: {
+    width: '100%',
   },
   
   // Variants
   primary: {
     backgroundColor: theme.colors.primary,
+    borderColor: theme.colors.primary,
     ...theme.shadows.sm,
   },
   secondary: {
     backgroundColor: theme.colors.secondary,
+    borderColor: theme.colors.secondary,
     ...theme.shadows.sm,
   },
   outline: {
     backgroundColor: 'transparent',
-    borderWidth: 1,
-    borderColor: theme.colors.primary,
+    borderColor: theme.colors.border,
+    borderWidth: 1.5,
   },
   ghost: {
     backgroundColor: 'transparent',
+    borderColor: 'transparent',
+  },
+  destructive: {
+    backgroundColor: theme.colors.error,
+    borderColor: theme.colors.error,
+    ...theme.shadows.sm,
   },
   
   // Sizes
   sm: {
-    height: 36,
-    paddingHorizontal: theme.spacing.base,
+    height: theme.components.button.height.sm,
+    paddingHorizontal: theme.components.button.paddingHorizontal.sm,
   },
   md: {
-    height: 44,
-    paddingHorizontal: theme.spacing.lg,
+    height: theme.components.button.height.md,
+    paddingHorizontal: theme.components.button.paddingHorizontal.md,
   },
   lg: {
-    height: 52,
-    paddingHorizontal: theme.spacing.xl,
+    height: theme.components.button.height.lg,
+    paddingHorizontal: theme.components.button.paddingHorizontal.lg,
   },
   
   // States
@@ -117,11 +151,33 @@ const styles = StyleSheet.create({
     opacity: 0.5,
   },
   
+  // Content
+  contentContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  
+  loadingContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  
+  iconLeft: {
+    marginRight: theme.spacing.sm,
+  },
+  
+  iconRight: {
+    marginLeft: theme.spacing.sm,
+  },
+  
   // Text styles
   text: {
     fontWeight: theme.typography.fontWeights.semibold,
     textAlign: 'center',
   },
+  
   primaryText: {
     color: theme.colors.surface,
     fontSize: theme.typography.fontSizes.base,
@@ -131,11 +187,15 @@ const styles = StyleSheet.create({
     fontSize: theme.typography.fontSizes.base,
   },
   outlineText: {
-    color: theme.colors.primary,
+    color: theme.colors.text,
     fontSize: theme.typography.fontSizes.base,
   },
   ghostText: {
     color: theme.colors.primary,
+    fontSize: theme.typography.fontSizes.base,
+  },
+  destructiveText: {
+    color: theme.colors.surface,
     fontSize: theme.typography.fontSizes.base,
   },
   
@@ -151,5 +211,9 @@ const styles = StyleSheet.create({
   
   disabledText: {
     opacity: 0.7,
+  },
+  
+  loadingText: {
+    marginLeft: theme.spacing.sm,
   },
 });

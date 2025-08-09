@@ -3,10 +3,10 @@ import { View, StyleSheet, Alert, KeyboardAvoidingView, Platform, ScrollView } f
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { theme } from '../../theme';
 import { StatusBar } from '../../components/ui/StatusBar';
-import { Heading1, BodyText, Caption } from '../../components/ui/Typography';
+import { Heading1, Heading3, BodyText, Caption } from '../../components/ui/Typography';
 import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
-
+import { FadeInView } from '../../components/ui/FadeInView';
 
 export default function LoginScreen({ navigation }: any) {
   const [email, setEmail] = useState('');
@@ -41,15 +41,15 @@ export default function LoginScreen({ navigation }: any) {
     // Simulate API call
     setTimeout(() => {
       setLoading(false);
-      Alert.alert('Login Success', 'Welcome back!', [
-        { text: 'OK', onPress: () => navigation.replace('Home') }
+      Alert.alert('Welcome Back!', 'Login successful', [
+        { text: 'Continue', onPress: () => navigation.replace('Home') }
       ]);
     }, 1500);
   };
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar style="dark" />
+      <StatusBar style="dark" backgroundColor={theme.colors.background} />
       <KeyboardAvoidingView 
         style={styles.keyboardView}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -57,76 +57,106 @@ export default function LoginScreen({ navigation }: any) {
         <ScrollView 
           contentContainerStyle={styles.scrollContainer}
           showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled"
         >
-          <View style={styles.header}>
-            <View style={styles.logoContainer}>
-              <Heading1 color={theme.colors.primary}>🏥</Heading1>
+          <FadeInView delay={200} direction="down">
+            <View style={styles.header}>
+              <View style={styles.logoContainer}>
+                <View style={styles.logo}>
+                  <Heading1 color={theme.colors.primary}>🏥</Heading1>
+                </View>
+                <View style={styles.logoBg} />
+              </View>
+              <Heading1 style={styles.title}>Welcome Back</Heading1>
+              <BodyText color={theme.colors.textSecondary} style={styles.subtitle}>
+                Sign in to continue your health journey
+              </BodyText>
             </View>
-            <Heading1 style={styles.title}>Welcome</Heading1>
-            <BodyText color={theme.colors.textSecondary} style={styles.subtitle}>
-              Sign in to continue to Telecheck
-            </BodyText>
-          </View>
+          </FadeInView>
 
-          <View style={styles.form}>
-            <Input
-              label="Email"
-              placeholder="Email"
-              value={email}
-              onChangeText={(text) => {
-                setEmail(text);
-                if (errors.email) setErrors({...errors, email: undefined});
-              }}
-              keyboardType="email-address"
-              autoCapitalize="none"
-              autoComplete="email"
-              error={errors.email}
-              leftIcon={<BodyText>📧</BodyText>}
-            />
+          <FadeInView delay={400} direction="up">
+            <View style={styles.form}>
+              <Input
+                label="Email Address"
+                placeholder="Enter your email"
+                value={email}
+                onChangeText={(text) => {
+                  setEmail(text);
+                  if (errors.email) setErrors({...errors, email: undefined});
+                }}
+                keyboardType="email-address"
+                autoCapitalize="none"
+                autoComplete="email"
+                error={errors.email}
+                leftIcon={
+                  <View style={styles.inputIcon}>
+                    <BodyText color={theme.colors.textSecondary}>📧</BodyText>
+                  </View>
+                }
+              />
 
-            <Input
-              label="Password"
-              placeholder="Enter your password"
-              value={password}
-              onChangeText={(text) => {
-                setPassword(text);
-                if (errors.password) setErrors({...errors, password: undefined});
-              }}
-              isPassword
-              error={errors.password}
-              leftIcon={<BodyText>🔒</BodyText>}
-            />
+              <Input
+                label="Password"
+                placeholder="Enter your password"
+                value={password}
+                onChangeText={(text) => {
+                  setPassword(text);
+                  if (errors.password) setErrors({...errors, password: undefined});
+                }}
+                isPassword
+                error={errors.password}
+                leftIcon={
+                  <View style={styles.inputIcon}>
+                    <BodyText color={theme.colors.textSecondary}>🔒</BodyText>
+                  </View>
+                }
+              />
 
-            <Button
-              title="Sign In"
-              onPress={handleLogin}
-              loading={loading}
-              style={styles.loginButton}
-            />
+              <Button
+                title="Sign In"
+                onPress={handleLogin}
+                loading={loading}
+                fullWidth
+                style={styles.loginButton}
+              />
 
-            <Button
-              title="Forgot Password?"
-              variant="ghost"
-              onPress={() => Alert.alert('Coming Soon', 'Password reset feature coming soon!')}
-              style={styles.forgotButton}
-            />
-          </View>
+              <Button
+                title="Forgot Password?"
+                variant="ghost"
+                onPress={() => Alert.alert('Coming Soon', 'Password reset feature coming soon!')}
+                style={styles.forgotButton}
+              />
+            </View>
+          </FadeInView>
 
-          <View style={styles.footer}>
-            <BodyText color={theme.colors.textSecondary} style={styles.footerText}>
-              Don't have an account?{' '}
-            </BodyText>
-            <Button
-              title="Create Account"
-              variant="ghost"
-              onPress={() => navigation.navigate('Register')}
-              style={styles.registerButton}
-            />
-          </View>
+          <FadeInView delay={600} direction="up">
+            <View style={styles.footer}>
+              <View style={styles.divider}>
+                <View style={styles.dividerLine} />
+                <Caption color={theme.colors.textTertiary} style={styles.dividerText}>
+                  or
+                </Caption>
+                <View style={styles.dividerLine} />
+              </View>
 
-          <Caption color={theme.colors.textTertiary} style={styles.disclaimer}>
-            By signing in, you agree to our Terms of Service and Privacy Policy
-          </Caption>
+              <Button
+                title="Create New Account"
+                variant="outline"
+                onPress={() => navigation.navigate('Register')}
+                fullWidth
+                style={styles.registerButton}
+              />
+            </View>
+          </FadeInView>
+
+          <FadeInView delay={800} direction="up">
+            <Caption color={theme.colors.textTertiary} style={styles.disclaimer}>
+              By signing in, you agree to our{' '}
+              <Caption color={theme.colors.primary}>Terms of Service</Caption>
+              {' '}and{' '}
+              <Caption color={theme.colors.primary}>Privacy Policy</Caption>
+            </Caption>
+          </FadeInView>
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>
@@ -152,13 +182,28 @@ const styles = StyleSheet.create({
     marginBottom: theme.spacing['3xl'],
   },
   logoContainer: {
+    position: 'relative',
+    marginBottom: theme.spacing.xl,
+  },
+  logo: {
     width: 80,
     height: 80,
     borderRadius: theme.borderRadius.xl,
-    backgroundColor: `${theme.colors.primary}15`,
+    backgroundColor: theme.colors.surface,
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: theme.spacing.lg,
+    zIndex: 2,
+    ...theme.shadows.lg,
+  },
+  logoBg: {
+    position: 'absolute',
+    top: 4,
+    left: 4,
+    width: 80,
+    height: 80,
+    borderRadius: theme.borderRadius.xl,
+    backgroundColor: `${theme.colors.primary}20`,
+    zIndex: 1,
   },
   title: {
     textAlign: 'center',
@@ -166,10 +211,16 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     textAlign: 'center',
-    lineHeight: theme.typography.lineHeights.relaxed,
+    lineHeight: theme.typography.lineHeights.relaxed * theme.typography.fontSizes.base,
   },
   form: {
     marginBottom: theme.spacing['2xl'],
+  },
+  inputIcon: {
+    width: 20,
+    height: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   loginButton: {
     marginTop: theme.spacing.lg,
@@ -179,23 +230,27 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   footer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
     marginBottom: theme.spacing.xl,
   },
-  footerText: {
-    textAlign: 'center',
+  divider: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: theme.spacing.lg,
+  },
+  dividerLine: {
+    flex: 1,
+    height: 1,
+    backgroundColor: theme.colors.border,
+  },
+  dividerText: {
+    marginHorizontal: theme.spacing.base,
   },
   registerButton: {
-    paddingHorizontal: 0,
-    height: 'auto' as any,
+    borderColor: theme.colors.border,
   },
   disclaimer: {
     textAlign: 'center',
-    lineHeight: theme.typography.lineHeights.relaxed,
+    lineHeight: theme.typography.lineHeights.relaxed * theme.typography.fontSizes.sm,
     paddingHorizontal: theme.spacing.lg,
   },
 });
-
-

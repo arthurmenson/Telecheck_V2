@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import { Card } from './Card';
-import { Typography, BodyText, Caption } from './Typography';
+import { Typography, BodyText, Caption, Heading3 } from './Typography';
 import { theme } from '../../theme';
 
 interface HealthMetricCardProps {
@@ -14,6 +14,8 @@ interface HealthMetricCardProps {
   trendValue?: string;
   onPress?: () => void;
   status?: 'normal' | 'warning' | 'critical';
+  subtitle?: string;
+  size?: 'sm' | 'md' | 'lg';
 }
 
 export const HealthMetricCard: React.FC<HealthMetricCardProps> = ({
@@ -26,6 +28,8 @@ export const HealthMetricCard: React.FC<HealthMetricCardProps> = ({
   trendValue,
   onPress,
   status = 'normal',
+  subtitle,
+  size = 'md',
 }) => {
   const getTrendIcon = () => {
     switch (trend) {
@@ -44,33 +48,49 @@ export const HealthMetricCard: React.FC<HealthMetricCardProps> = ({
     }
   };
 
+  const getTrendColor = () => {
+    switch (trend) {
+      case 'up': return status === 'critical' ? theme.colors.error : theme.colors.success;
+      case 'down': return status === 'critical' ? theme.colors.success : theme.colors.textSecondary;
+      case 'stable': return theme.colors.textSecondary;
+      default: return theme.colors.textSecondary;
+    }
+  };
+
+  const cardStyle = [
+    styles.card,
+    styles[size],
+  ];
+
   const Content = (
-    <Card style={styles.card}>
+    <Card style={cardStyle} variant="elevated">
       <View style={styles.header}>
-        <View style={[styles.iconContainer, { backgroundColor: `${getStatusColor()}20` }]}>
-          <Typography variant="h3" color={getStatusColor()}>
+        <View style={[styles.iconContainer, { backgroundColor: `${getStatusColor()}15` }]}>
+          <Typography variant="h4" color={getStatusColor()}>
             {icon}
           </Typography>
         </View>
-        {trend && (
-          <View style={styles.trendContainer}>
-            <Typography variant="caption">
+        {trend && trendValue && (
+          <View style={[styles.trendContainer, { backgroundColor: `${getTrendColor()}10` }]}>
+            <Caption color={getTrendColor()} style={styles.trendText}>
               {getTrendIcon()} {trendValue}
-            </Typography>
+            </Caption>
           </View>
         )}
       </View>
       
       <View style={styles.content}>
-        <Caption color={theme.colors.textSecondary}>{title}</Caption>
+        <Caption color={theme.colors.textSecondary} style={styles.title}>
+          {title}
+        </Caption>
+        
         <View style={styles.valueContainer}>
-          <Typography 
-            variant="h2" 
+          <Heading3 
             color={getStatusColor()}
             style={styles.value}
           >
             {value}
-          </Typography>
+          </Heading3>
           {unit && (
             <BodyText 
               color={theme.colors.textSecondary}
@@ -80,13 +100,23 @@ export const HealthMetricCard: React.FC<HealthMetricCardProps> = ({
             </BodyText>
           )}
         </View>
+        
+        {subtitle && (
+          <Caption color={theme.colors.textTertiary} style={styles.subtitle}>
+            {subtitle}
+          </Caption>
+        )}
       </View>
+      
+      {status !== 'normal' && (
+        <View style={[styles.statusIndicator, { backgroundColor: getStatusColor() }]} />
+      )}
     </Card>
   );
 
   if (onPress) {
     return (
-      <TouchableOpacity onPress={onPress} activeOpacity={0.8}>
+      <TouchableOpacity onPress={onPress} activeOpacity={0.8} style={styles.touchable}>
         {Content}
       </TouchableOpacity>
     );
@@ -96,8 +126,24 @@ export const HealthMetricCard: React.FC<HealthMetricCardProps> = ({
 };
 
 const styles = StyleSheet.create({
+  touchable: {
+    flex: 1,
+  },
   card: {
+    position: 'relative',
+    overflow: 'hidden',
+  },
+  sm: {
+    minHeight: 100,
+    padding: theme.spacing.md,
+  },
+  md: {
     minHeight: 120,
+    padding: theme.spacing.base,
+  },
+  lg: {
+    minHeight: 140,
+    padding: theme.spacing.lg,
   },
   header: {
     flexDirection: 'row',
@@ -108,24 +154,31 @@ const styles = StyleSheet.create({
   iconContainer: {
     width: 48,
     height: 48,
-    borderRadius: theme.borderRadius.base,
+    borderRadius: theme.borderRadius.md,
     alignItems: 'center',
     justifyContent: 'center',
   },
   trendContainer: {
-    backgroundColor: theme.colors.background,
     paddingHorizontal: theme.spacing.sm,
     paddingVertical: theme.spacing.xs,
-    borderRadius: theme.borderRadius.sm,
+    borderRadius: theme.borderRadius.base,
+  },
+  trendText: {
+    fontSize: theme.typography.fontSizes.xs,
+    fontWeight: theme.typography.fontWeights.medium,
   },
   content: {
     flex: 1,
     justifyContent: 'flex-end',
   },
+  title: {
+    marginBottom: theme.spacing.xs,
+    fontWeight: theme.typography.fontWeights.medium,
+  },
   valueContainer: {
     flexDirection: 'row',
     alignItems: 'baseline',
-    marginTop: theme.spacing.xs,
+    marginBottom: theme.spacing.xs,
   },
   value: {
     lineHeight: undefined,
@@ -133,5 +186,15 @@ const styles = StyleSheet.create({
   unit: {
     marginLeft: theme.spacing.xs,
     marginBottom: 2,
+  },
+  subtitle: {
+    fontSize: theme.typography.fontSizes.xs,
+  },
+  statusIndicator: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    width: 4,
+    height: '100%',
   },
 });
