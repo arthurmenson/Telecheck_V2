@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { Alert } from 'react-native';
-import * as authService from '../services/auth.service';
+import * as authService from '../../services/auth.service';
 
 interface User {
   id: string;
