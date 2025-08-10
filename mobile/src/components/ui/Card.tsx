@@ -5,20 +5,25 @@ import { theme } from '../../theme';
 export interface CardProps {
   children: React.ReactNode;
   style?: ViewStyle;
-  variant?: 'default' | 'elevated' | 'outlined';
+  variant?: 'default' | 'elevated' | 'outlined' | 'glass' | 'gradient';
   padding?: keyof typeof theme.spacing;
+  borderRadius?: keyof typeof theme.borderRadius;
 }
 
 export const Card: React.FC<CardProps> = ({ 
   children, 
   style, 
   variant = 'default',
-  padding = 'base'
+  padding = 'xl',
+  borderRadius = '2xl'
 }) => {
   const cardStyle = [
     styles.base,
     styles[variant],
-    { padding: theme.spacing[padding] },
+    { 
+      padding: theme.spacing[padding],
+      borderRadius: theme.borderRadius[borderRadius]
+    },
     style
   ];
 
@@ -31,19 +36,28 @@ export const Card: React.FC<CardProps> = ({
 
 const styles = StyleSheet.create({
   base: {
-    borderRadius: theme.borderRadius.lg,
     backgroundColor: theme.colors.card,
+    overflow: 'hidden',
   },
   default: {
-    ...theme.shadows.base,
+    ...theme.shadows.sm,
   },
   elevated: {
     ...theme.shadows.lg,
+    backgroundColor: theme.colors.surface,
   },
   outlined: {
-    borderWidth: 1,
+    borderWidth: 1.5,
     borderColor: theme.colors.border,
-    shadowOpacity: 0,
-    elevation: 0,
+    backgroundColor: theme.colors.surface,
+  },
+  glass: {
+    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+    backdropFilter: 'blur(10px)',
+    ...theme.shadows.md,
+  },
+  gradient: {
+    backgroundColor: theme.colors.primaryBg,
+    ...theme.shadows.base,
   },
 });

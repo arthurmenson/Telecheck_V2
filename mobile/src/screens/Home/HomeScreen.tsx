@@ -13,7 +13,7 @@ import { useAuth } from '../Auth/AuthContext';
 import { theme } from '../../theme';
 import { Card } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
-import { Typography, Heading1, Heading3, BodyText, Caption, BodyLarge } from '../../components/ui/Typography';
+import { Typography, Heading1, Heading3, Heading4, BodyText, Caption, BodyLarge } from '../../components/ui/Typography';
 import { HealthMetricCard } from '../../components/ui/HealthMetricCard';
 import { FadeInView } from '../../components/ui/FadeInView';
 import { SlideInCard } from '../../components/ui/SlideInCard';
@@ -33,7 +33,7 @@ export default function HomeScreen({ navigation }: any) {
       title: 'Blood Pressure',
       value: '118/76',
       unit: 'mmHg',
-      icon: '🩺',
+      icon: '🫀',
       color: theme.colors.bloodPressure,
       trend: 'stable' as const,
       trendValue: 'Normal',
@@ -45,7 +45,7 @@ export default function HomeScreen({ navigation }: any) {
       title: 'Heart Rate',
       value: '68',
       unit: 'bpm',
-      icon: '❤️',
+      icon: '💓',
       color: theme.colors.heartRate,
       trend: 'down' as const,
       trendValue: '-4 from last',
@@ -80,9 +80,9 @@ export default function HomeScreen({ navigation }: any) {
 
   const quickActions = [
     {
-      title: 'Take Reading',
-      subtitle: 'Manual entry',
-      icon: '📝',
+      title: 'Record Vitals',
+      subtitle: 'Quick entry',
+      icon: '📊',
       color: theme.colors.primary,
       onPress: () => navigation.navigate('ManualEntry'),
     },
@@ -103,16 +103,9 @@ export default function HomeScreen({ navigation }: any) {
     {
       title: 'Reports',
       subtitle: 'Health data',
-      icon: '📊',
+      icon: '📈',
       color: theme.colors.success,
       onPress: () => navigation.navigate('Reports'),
-    },
-    {
-      title: 'Education',
-      subtitle: 'Learn more',
-      icon: '📚',
-      color: theme.colors.secondary,
-      onPress: () => navigation.navigate('Education'),
     },
   ];
 
@@ -154,21 +147,21 @@ export default function HomeScreen({ navigation }: any) {
           />
         }
       >
-        {/* Header */}
+        {/* Modern Header */}
         <FadeInView delay={100} direction="down">
           <View style={styles.header}>
             <View style={styles.headerContent}>
               <View style={styles.headerText}>
-                <Caption color={theme.colors.textSecondary}>
+                <Caption color={theme.colors.textSecondary} weight="medium">
                   {currentTime.toLocaleDateString('en-US', { 
                     weekday: 'long',
                     month: 'long',
                     day: 'numeric'
                   })}
                 </Caption>
-                <Heading1 style={styles.welcomeText}>
-                  {getGreeting()}, {userName}! 👋
-                </Heading1>
+                <Heading3 style={styles.welcomeText} weight="bold">
+                  {getGreeting()}, {userName}
+                </Heading3>
               </View>
               <TouchableOpacity 
                 style={styles.profileButton}
@@ -179,19 +172,55 @@ export default function HomeScreen({ navigation }: any) {
                     {user?.avatar || '👩‍⚕️'}
                   </Typography>
                 </View>
+                <View style={styles.onlineIndicator} />
               </TouchableOpacity>
             </View>
           </View>
         </FadeInView>
 
-        {/* Health Summary */}
-        <FadeInView delay={300} direction="up">
+        {/* Health Score Card */}
+        <FadeInView delay={200} direction="up">
+          <View style={styles.section}>
+            <SlideInCard delay={300} direction="up" style={styles.healthScoreCard}>
+              <Card variant="gradient" padding="xl" borderRadius="3xl">
+                <View style={styles.healthScoreContent}>
+                  <View style={styles.scoreLeft}>
+                    <View style={styles.scoreIconContainer}>
+                      <Typography variant="h2">💚</Typography>
+                    </View>
+                    <View style={styles.scoreInfo}>
+                      <Caption color={theme.colors.textSecondary} weight="semibold">
+                        HEALTH SCORE
+                      </Caption>
+                      <Heading1 color={theme.colors.success} weight="black">
+                        85
+                      </Heading1>
+                      <Caption color={theme.colors.success} weight="medium">
+                        Excellent
+                      </Caption>
+                    </View>
+                  </View>
+                  <View style={styles.scoreRight}>
+                    <View style={styles.scoreBadge}>
+                      <Caption color={theme.colors.success} weight="bold">
+                        +3 this week
+                      </Caption>
+                    </View>
+                  </View>
+                </View>
+              </Card>
+            </SlideInCard>
+          </View>
+        </FadeInView>
+
+        {/* Health Metrics Grid */}
+        <FadeInView delay={400} direction="up">
           <View style={styles.section}>
             <View style={styles.sectionHeader}>
-              <Heading3 style={styles.sectionTitle}>Health Overview</Heading3>
+              <Heading4 style={styles.sectionTitle} weight="bold">Health Overview</Heading4>
               <TouchableOpacity onPress={() => navigation.navigate('TrendsTab')}>
-                <Caption color={theme.colors.primary} style={styles.seeAllText}>
-                  View All
+                <Caption color={theme.colors.primary} style={styles.seeAllText} weight="semibold">
+                  View All →
                 </Caption>
               </TouchableOpacity>
             </View>
@@ -200,13 +229,14 @@ export default function HomeScreen({ navigation }: any) {
               {recentMetrics.map((metric, index) => (
                 <View key={metric.id} style={styles.metricItem}>
                   <SlideInCard 
-                    delay={400 + (index * 100)}
+                    delay={500 + (index * 100)}
                     direction="up"
                     style={styles.metricCard}
                   >
                     <HealthMetricCard
                       {...metric}
                       size="md"
+                      variant="default"
                       onPress={() => navigation.navigate('TrendsTab')}
                     />
                   </SlideInCard>
@@ -219,7 +249,7 @@ export default function HomeScreen({ navigation }: any) {
         {/* Quick Actions */}
         <FadeInView delay={800} direction="up">
           <View style={styles.section}>
-            <Heading3 style={styles.sectionTitle}>Quick Actions</Heading3>
+            <Heading4 style={styles.sectionTitle} weight="bold">Quick Actions</Heading4>
             <View style={styles.actionsGrid}>
               {quickActions.map((action, index) => (
                 <SlideInCard
@@ -231,15 +261,15 @@ export default function HomeScreen({ navigation }: any) {
                   <TouchableOpacity
                     style={styles.actionCard}
                     onPress={action.onPress}
-                    activeOpacity={0.7}
+                    activeOpacity={0.8}
                   >
                     <View style={[styles.actionIcon, { backgroundColor: `${action.color}15` }]}>
-                      <Typography variant="h4" color={action.color}>
+                      <Typography variant="h5" color={action.color}>
                         {action.icon}
                       </Typography>
                     </View>
                     <View style={styles.actionContent}>
-                      <BodyText style={styles.actionTitle}>{action.title}</BodyText>
+                      <BodyText style={styles.actionTitle} weight="semibold">{action.title}</BodyText>
                       <Caption color={theme.colors.textSecondary}>
                         {action.subtitle}
                       </Caption>
@@ -259,46 +289,48 @@ export default function HomeScreen({ navigation }: any) {
         {/* Recent Activity */}
         <FadeInView delay={1200} direction="up">
           <View style={styles.section}>
-            <Heading3 style={styles.sectionTitle}>Recent Activity</Heading3>
+            <Heading4 style={styles.sectionTitle} weight="bold">Recent Activity</Heading4>
             <SlideInCard delay={1300} direction="left" style={styles.activityCard}>
-              <View style={styles.activityItem}>
-                <View style={[styles.activityIcon, { backgroundColor: `${theme.colors.bloodPressure}15` }]}>
-                  <Typography variant="body" color={theme.colors.bloodPressure}>🩺</Typography>
+              <Card variant="elevated" padding="xl" borderRadius="2xl">
+                <View style={styles.activityItem}>
+                  <View style={[styles.activityIcon, { backgroundColor: `${theme.colors.bloodPressure}15` }]}>
+                    <Typography variant="h6" color={theme.colors.bloodPressure}>🫀</Typography>
+                  </View>
+                  <View style={styles.activityContent}>
+                    <BodyText style={styles.activityTitle} weight="semibold">Blood pressure reading</BodyText>
+                    <Caption color={theme.colors.textSecondary}>2 hours ago • 118/76 mmHg • Normal</Caption>
+                  </View>
+                  <View style={styles.activityStatus}>
+                    <View style={[styles.statusDot, { backgroundColor: theme.colors.success }]} />
+                  </View>
                 </View>
-                <View style={styles.activityContent}>
-                  <BodyText style={styles.activityTitle}>Blood pressure reading</BodyText>
-                  <Caption>2 hours ago • 118/76 mmHg • Normal</Caption>
+                
+                <View style={[styles.activityItem, styles.activityItemBorder]}>
+                  <View style={[styles.activityIcon, { backgroundColor: `${theme.colors.info}15` }]}>
+                    <Typography variant="h6" color={theme.colors.info}>💊</Typography>
+                  </View>
+                  <View style={styles.activityContent}>
+                    <BodyText style={styles.activityTitle} weight="semibold">Medication taken</BodyText>
+                    <Caption color={theme.colors.textSecondary}>4 hours ago • Lisinopril 10mg</Caption>
+                  </View>
+                  <View style={styles.activityStatus}>
+                    <View style={[styles.statusDot, { backgroundColor: theme.colors.success }]} />
+                  </View>
                 </View>
-                <View style={styles.activityStatus}>
-                  <View style={[styles.statusDot, { backgroundColor: theme.colors.success }]} />
+                
+                <View style={[styles.activityItem, styles.activityItemBorder]}>
+                  <View style={[styles.activityIcon, { backgroundColor: `${theme.colors.secondary}15` }]}>
+                    <Typography variant="h6" color={theme.colors.secondary}>💬</Typography>
+                  </View>
+                  <View style={styles.activityContent}>
+                    <BodyText style={styles.activityTitle} weight="semibold">Message from Dr. Johnson</BodyText>
+                    <Caption color={theme.colors.textSecondary}>Yesterday • "Your readings look excellent!"</Caption>
+                  </View>
+                  <View style={styles.activityStatus}>
+                    <View style={[styles.statusDot, { backgroundColor: theme.colors.warning }]} />
+                  </View>
                 </View>
-              </View>
-              
-              <View style={[styles.activityItem, styles.activityItemBorder]}>
-                <View style={[styles.activityIcon, { backgroundColor: `${theme.colors.info}15` }]}>
-                  <Typography variant="body" color={theme.colors.info}>💊</Typography>
-                </View>
-                <View style={styles.activityContent}>
-                  <BodyText style={styles.activityTitle}>Medication taken</BodyText>
-                  <Caption>4 hours ago • Lisinopril 10mg</Caption>
-                </View>
-                <View style={styles.activityStatus}>
-                  <View style={[styles.statusDot, { backgroundColor: theme.colors.success }]} />
-                </View>
-              </View>
-              
-              <View style={[styles.activityItem, styles.activityItemBorder]}>
-                <View style={[styles.activityIcon, { backgroundColor: `${theme.colors.secondary}15` }]}>
-                  <Typography variant="body" color={theme.colors.secondary}>💬</Typography>
-                </View>
-                <View style={styles.activityContent}>
-                  <BodyText style={styles.activityTitle}>Message from Dr. Johnson</BodyText>
-                  <Caption>Yesterday • "Your readings look excellent!"</Caption>
-                </View>
-                <View style={styles.activityStatus}>
-                  <View style={[styles.statusDot, { backgroundColor: theme.colors.warning }]} />
-                </View>
-              </View>
+              </Card>
             </SlideInCard>
           </View>
         </FadeInView>
@@ -306,39 +338,41 @@ export default function HomeScreen({ navigation }: any) {
         {/* Care Programs */}
         <FadeInView delay={1500} direction="up">
           <View style={[styles.section, styles.lastSection]}>
-            <Heading3 style={styles.sectionTitle}>Your Care Programs</Heading3>
+            <Heading4 style={styles.sectionTitle} weight="bold">Your Care Programs</Heading4>
             <SlideInCard delay={1600} direction="up" style={styles.programCard}>
-              <View style={styles.programHeader}>
-                <View style={styles.programIcon}>
-                  <Typography variant="h3">🏥</Typography>
+              <Card variant="outlined" padding="xl" borderRadius="2xl">
+                <View style={styles.programHeader}>
+                  <View style={styles.programIcon}>
+                    <Typography variant="h3">🏥</Typography>
+                  </View>
+                  <View style={styles.programInfo}>
+                    <BodyLarge style={styles.programTitle} weight="bold">Hypertension Management</BodyLarge>
+                    <Caption color={theme.colors.textSecondary} weight="medium">
+                      Active since March 2024
+                    </Caption>
+                  </View>
+                  <View style={styles.programStatus}>
+                    <View style={[styles.statusDot, { backgroundColor: theme.colors.success }]} />
+                  </View>
                 </View>
-                <View style={styles.programInfo}>
-                  <BodyLarge style={styles.programTitle}>Hypertension Management</BodyLarge>
-                  <Caption color={theme.colors.textSecondary}>
-                    Active since March 2024
-                  </Caption>
+                
+                <View style={styles.programActions}>
+                  <Button
+                    title="View Care Plan"
+                    onPress={() => navigation.navigate('CCMCarePlan')}
+                    variant="primary"
+                    size="md"
+                    style={styles.programButton}
+                  />
+                  <Button
+                    title="Join RPM"
+                    onPress={() => navigation.navigate('RPMOnboarding')}
+                    variant="outline"
+                    size="md"
+                    style={styles.programButton}
+                  />
                 </View>
-                <View style={styles.programStatus}>
-                  <View style={[styles.statusDot, { backgroundColor: theme.colors.success }]} />
-                </View>
-              </View>
-              
-              <View style={styles.programActions}>
-                <Button
-                  title="View Care Plan"
-                  onPress={() => navigation.navigate('CCMCarePlan')}
-                  variant="outline"
-                  size="sm"
-                  style={styles.programButton}
-                />
-                <Button
-                  title="Join RPM"
-                  onPress={() => navigation.navigate('RPMOnboarding')}
-                  variant="ghost"
-                  size="sm"
-                  style={styles.programButton}
-                />
-              </View>
+              </Card>
             </SlideInCard>
           </View>
         </FadeInView>
@@ -356,9 +390,10 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   header: {
-    paddingHorizontal: theme.spacing.base,
-    paddingTop: theme.spacing.base,
-    paddingBottom: theme.spacing.lg,
+    paddingHorizontal: theme.spacing.xl,
+    paddingTop: theme.spacing.lg,
+    paddingBottom: theme.spacing['2xl'],
+    backgroundColor: theme.colors.surface,
   },
   headerContent: {
     flexDirection: 'row',
@@ -369,51 +404,91 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   welcomeText: {
-    marginTop: theme.spacing.xs,
+    marginTop: theme.spacing.sm,
   },
   profileButton: {
-    marginLeft: theme.spacing.base,
+    position: 'relative',
+    marginLeft: theme.spacing.lg,
   },
   avatar: {
-    width: 48,
-    height: 48,
-    borderRadius: theme.borderRadius.full,
+    width: 56,
+    height: 56,
+    borderRadius: theme.borderRadius.xl,
     backgroundColor: `${theme.colors.primary}15`,
     alignItems: 'center',
     justifyContent: 'center',
+    ...theme.shadows.base,
+  },
+  onlineIndicator: {
+    position: 'absolute',
+    bottom: 2,
+    right: 2,
+    width: 16,
+    height: 16,
+    borderRadius: theme.borderRadius.full,
+    backgroundColor: theme.colors.success,
+    borderWidth: 3,
+    borderColor: theme.colors.surface,
   },
   section: {
-    marginBottom: theme.spacing.xl,
-    paddingHorizontal: theme.spacing.base,
+    marginBottom: theme.spacing['3xl'],
+    paddingHorizontal: theme.spacing.xl,
   },
   lastSection: {
-    marginBottom: theme.spacing['2xl'],
+    marginBottom: theme.spacing['5xl'],
   },
   sectionHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: theme.spacing.base,
+    marginBottom: theme.spacing.xl,
   },
   sectionTitle: {
-    marginBottom: theme.spacing.base,
+    marginBottom: theme.spacing.lg,
   },
   seeAllText: {
-    fontWeight: theme.typography.fontWeights.medium,
+    letterSpacing: 0.3,
+  },
+  healthScoreCard: {
+    width: '100%',
+  },
+  healthScoreContent: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  scoreLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  scoreIconContainer: {
+    marginRight: theme.spacing.lg,
+  },
+  scoreInfo: {
+    alignItems: 'flex-start',
+  },
+  scoreRight: {
+    alignItems: 'flex-end',
+  },
+  scoreBadge: {
+    backgroundColor: `${theme.colors.success}15`,
+    paddingHorizontal: theme.spacing.md,
+    paddingVertical: theme.spacing.sm,
+    borderRadius: theme.borderRadius.lg,
   },
   metricsGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: theme.spacing.md,
+    gap: theme.spacing.lg,
   },
   metricItem: {
-    width: (width - theme.spacing.base * 2 - theme.spacing.md) / 2,
+    width: (width - theme.spacing.xl * 2 - theme.spacing.lg) / 2,
   },
   metricCard: {
     flex: 1,
   },
   actionsGrid: {
-    gap: theme.spacing.md,
+    gap: theme.spacing.lg,
   },
   actionCardContainer: {
     width: '100%',
@@ -422,93 +497,90 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: theme.colors.surface,
-    borderRadius: theme.borderRadius.lg,
-    padding: theme.spacing.base,
-    ...theme.shadows.sm,
+    borderRadius: theme.borderRadius['2xl'],
+    padding: theme.spacing.xl,
+    ...theme.shadows.base,
   },
   actionIcon: {
-    width: 48,
-    height: 48,
-    borderRadius: theme.borderRadius.md,
+    width: 56,
+    height: 56,
+    borderRadius: theme.borderRadius.xl,
     alignItems: 'center',
     justifyContent: 'center',
-    marginRight: theme.spacing.md,
+    marginRight: theme.spacing.lg,
   },
   actionContent: {
     flex: 1,
   },
   actionTitle: {
-    fontWeight: theme.typography.fontWeights.medium,
     marginBottom: theme.spacing.xs,
   },
   actionArrow: {
-    marginLeft: theme.spacing.sm,
+    marginLeft: theme.spacing.md,
   },
   activityCard: {
-    padding: theme.spacing.base,
+    width: '100%',
   },
   activityItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: theme.spacing.md,
+    paddingVertical: theme.spacing.lg,
   },
   activityItemBorder: {
     borderTopWidth: 1,
     borderTopColor: theme.colors.borderLight,
   },
   activityIcon: {
-    width: 40,
-    height: 40,
-    borderRadius: theme.borderRadius.base,
+    width: 48,
+    height: 48,
+    borderRadius: theme.borderRadius.lg,
     alignItems: 'center',
     justifyContent: 'center',
-    marginRight: theme.spacing.md,
+    marginRight: theme.spacing.lg,
   },
   activityContent: {
     flex: 1,
   },
   activityTitle: {
-    fontWeight: theme.typography.fontWeights.medium,
     marginBottom: theme.spacing.xs,
   },
   activityStatus: {
-    marginLeft: theme.spacing.sm,
+    marginLeft: theme.spacing.md,
   },
   statusDot: {
-    width: 8,
-    height: 8,
+    width: 10,
+    height: 10,
     borderRadius: theme.borderRadius.full,
   },
   programCard: {
-    padding: theme.spacing.base,
+    width: '100%',
   },
   programHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: theme.spacing.base,
+    marginBottom: theme.spacing.xl,
   },
   programIcon: {
-    width: 48,
-    height: 48,
-    borderRadius: theme.borderRadius.md,
+    width: 56,
+    height: 56,
+    borderRadius: theme.borderRadius.xl,
     backgroundColor: `${theme.colors.primary}15`,
     alignItems: 'center',
     justifyContent: 'center',
-    marginRight: theme.spacing.md,
+    marginRight: theme.spacing.lg,
   },
   programInfo: {
     flex: 1,
   },
   programTitle: {
-    fontWeight: theme.typography.fontWeights.semibold,
     marginBottom: theme.spacing.xs,
   },
   programStatus: {
-    marginLeft: theme.spacing.sm,
+    marginLeft: theme.spacing.md,
   },
   programActions: {
     flexDirection: 'row',
-    gap: theme.spacing.md,
+    gap: theme.spacing.lg,
   },
   programButton: {
     flex: 1,

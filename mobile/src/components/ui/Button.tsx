@@ -13,8 +13,8 @@ import { theme } from '../../theme';
 export interface ButtonProps {
   title: string;
   onPress: () => void;
-  variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'destructive';
-  size?: 'sm' | 'md' | 'lg';
+  variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'destructive' | 'gradient';
+  size?: 'sm' | 'md' | 'lg' | 'xl';
   disabled?: boolean;
   loading?: boolean;
   style?: ViewStyle;
@@ -60,7 +60,7 @@ export const Button: React.FC<ButtonProps> = ({
         <View style={styles.loadingContainer}>
           <ActivityIndicator 
             size="small" 
-            color={variant === 'primary' || variant === 'destructive' ? theme.colors.surface : theme.colors.primary} 
+            color={variant === 'primary' || variant === 'destructive' || variant === 'gradient' ? theme.colors.surface : theme.colors.primary} 
           />
           <Text style={[buttonTextStyle, styles.loadingText]}>Loading...</Text>
         </View>
@@ -85,7 +85,7 @@ export const Button: React.FC<ButtonProps> = ({
       style={buttonStyle}
       onPress={onPress}
       disabled={disabled || loading}
-      activeOpacity={0.7}
+      activeOpacity={0.8}
     >
       {renderContent()}
     </TouchableOpacity>
@@ -98,24 +98,21 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: theme.components.button.borderRadius,
-    borderWidth: 1,
-    borderColor: 'transparent',
+    borderWidth: 0,
   },
   
   fullWidth: {
     width: '100%',
   },
   
-  // Variants
+  // Modern variants
   primary: {
     backgroundColor: theme.colors.primary,
-    borderColor: theme.colors.primary,
-    ...theme.shadows.sm,
+    ...theme.shadows.base,
   },
   secondary: {
     backgroundColor: theme.colors.secondary,
-    borderColor: theme.colors.secondary,
-    ...theme.shadows.sm,
+    ...theme.shadows.base,
   },
   outline: {
     backgroundColor: 'transparent',
@@ -123,27 +120,37 @@ const styles = StyleSheet.create({
     borderWidth: 1.5,
   },
   ghost: {
-    backgroundColor: 'transparent',
-    borderColor: 'transparent',
+    backgroundColor: theme.colors.backgroundSecondary,
   },
   destructive: {
     backgroundColor: theme.colors.error,
-    borderColor: theme.colors.error,
-    ...theme.shadows.sm,
+    ...theme.shadows.base,
+  },
+  gradient: {
+    backgroundColor: theme.colors.primary,
+    ...theme.shadows.lg,
   },
   
-  // Sizes
+  // Enhanced sizes
   sm: {
     height: theme.components.button.height.sm,
     paddingHorizontal: theme.components.button.paddingHorizontal.sm,
+    borderRadius: theme.borderRadius.md,
   },
   md: {
     height: theme.components.button.height.md,
     paddingHorizontal: theme.components.button.paddingHorizontal.md,
+    borderRadius: theme.borderRadius.lg,
   },
   lg: {
     height: theme.components.button.height.lg,
     paddingHorizontal: theme.components.button.paddingHorizontal.lg,
+    borderRadius: theme.borderRadius.xl,
+  },
+  xl: {
+    height: theme.components.button.height.xl,
+    paddingHorizontal: theme.components.button.paddingHorizontal.xl,
+    borderRadius: theme.borderRadius.xl,
   },
   
   // States
@@ -172,10 +179,11 @@ const styles = StyleSheet.create({
     marginLeft: theme.spacing.sm,
   },
   
-  // Text styles
+  // Enhanced text styles
   text: {
     fontWeight: theme.typography.fontWeights.semibold,
     textAlign: 'center',
+    letterSpacing: 0.3,
   },
   
   primaryText: {
@@ -198,6 +206,10 @@ const styles = StyleSheet.create({
     color: theme.colors.surface,
     fontSize: theme.typography.fontSizes.base,
   },
+  gradientText: {
+    color: theme.colors.surface,
+    fontSize: theme.typography.fontSizes.base,
+  },
   
   smText: {
     fontSize: theme.typography.fontSizes.sm,
@@ -207,6 +219,9 @@ const styles = StyleSheet.create({
   },
   lgText: {
     fontSize: theme.typography.fontSizes.lg,
+  },
+  xlText: {
+    fontSize: theme.typography.fontSizes.xl,
   },
   
   disabledText: {

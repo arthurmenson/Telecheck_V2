@@ -4,7 +4,7 @@ import { theme } from '../../theme';
 
 interface TypographyProps {
   children: React.ReactNode;
-  variant?: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'body' | 'bodyLarge' | 'bodySmall' | 'caption' | 'overline' | 'label';
+  variant?: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'body' | 'bodyLarge' | 'bodySmall' | 'caption' | 'overline' | 'label';
   color?: string;
   style?: TextStyle;
   numberOfLines?: number;
@@ -57,6 +57,10 @@ export const Heading5: React.FC<Omit<TypographyProps, 'variant'>> = (props) => (
   <Typography variant="h5" {...props} />
 );
 
+export const Heading6: React.FC<Omit<TypographyProps, 'variant'>> = (props) => (
+  <Typography variant="h6" {...props} />
+);
+
 export const BodyText: React.FC<Omit<TypographyProps, 'variant'>> = (props) => (
   <Typography variant="body" {...props} />
 );
@@ -79,32 +83,40 @@ export const Label: React.FC<Omit<TypographyProps, 'variant'>> = (props) => (
 
 const styles = StyleSheet.create({
   h1: {
+    fontSize: theme.typography.fontSizes['6xl'],
+    fontWeight: theme.typography.fontWeights.black,
+    lineHeight: theme.typography.lineHeights.tight * theme.typography.fontSizes['6xl'],
+    color: theme.colors.text,
+    letterSpacing: -1,
+  },
+  h2: {
     fontSize: theme.typography.fontSizes['5xl'],
-    fontWeight: theme.typography.fontWeights.bold,
+    fontWeight: theme.typography.fontWeights.extrabold,
     lineHeight: theme.typography.lineHeights.tight * theme.typography.fontSizes['5xl'],
+    color: theme.colors.text,
+    letterSpacing: -0.8,
+  },
+  h3: {
+    fontSize: theme.typography.fontSizes['4xl'],
+    fontWeight: theme.typography.fontWeights.bold,
+    lineHeight: theme.typography.lineHeights.snug * theme.typography.fontSizes['4xl'],
     color: theme.colors.text,
     letterSpacing: -0.5,
   },
-  h2: {
-    fontSize: theme.typography.fontSizes['4xl'],
-    fontWeight: theme.typography.fontWeights.bold,
-    lineHeight: theme.typography.lineHeights.tight * theme.typography.fontSizes['4xl'],
-    color: theme.colors.text,
-    letterSpacing: -0.25,
-  },
-  h3: {
+  h4: {
     fontSize: theme.typography.fontSizes['3xl'],
-    fontWeight: theme.typography.fontWeights.semibold,
+    fontWeight: theme.typography.fontWeights.bold,
     lineHeight: theme.typography.lineHeights.snug * theme.typography.fontSizes['3xl'],
     color: theme.colors.text,
-  },
-  h4: {
-    fontSize: theme.typography.fontSizes['2xl'],
-    fontWeight: theme.typography.fontWeights.semibold,
-    lineHeight: theme.typography.lineHeights.snug * theme.typography.fontSizes['2xl'],
-    color: theme.colors.text,
+    letterSpacing: -0.3,
   },
   h5: {
+    fontSize: theme.typography.fontSizes['2xl'],
+    fontWeight: theme.typography.fontWeights.semibold,
+    lineHeight: theme.typography.lineHeights.normal * theme.typography.fontSizes['2xl'],
+    color: theme.colors.text,
+  },
+  h6: {
     fontSize: theme.typography.fontSizes.xl,
     fontWeight: theme.typography.fontWeights.semibold,
     lineHeight: theme.typography.lineHeights.normal * theme.typography.fontSizes.xl,
@@ -130,24 +142,24 @@ const styles = StyleSheet.create({
   },
   caption: {
     fontSize: theme.typography.fontSizes.sm,
-    fontWeight: theme.typography.fontWeights.normal,
+    fontWeight: theme.typography.fontWeights.medium,
     lineHeight: theme.typography.lineHeights.normal * theme.typography.fontSizes.sm,
     color: theme.colors.textSecondary,
   },
   label: {
     fontSize: theme.typography.fontSizes.sm,
-    fontWeight: theme.typography.fontWeights.medium,
+    fontWeight: theme.typography.fontWeights.semibold,
     lineHeight: theme.typography.lineHeights.normal * theme.typography.fontSizes.sm,
     color: theme.colors.text,
     textTransform: 'uppercase',
-    letterSpacing: 0.5,
+    letterSpacing: 1,
   },
   overline: {
     fontSize: theme.typography.fontSizes.xs,
-    fontWeight: theme.typography.fontWeights.semibold,
+    fontWeight: theme.typography.fontWeights.bold,
     lineHeight: theme.typography.lineHeights.normal * theme.typography.fontSizes.xs,
     color: theme.colors.textSecondary,
     textTransform: 'uppercase',
-    letterSpacing: 1,
+    letterSpacing: 1.5,
   },
 });

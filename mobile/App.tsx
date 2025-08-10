@@ -42,13 +42,16 @@ function MainTabs() {
         tabBarStyle: {
           backgroundColor: theme.colors.surface,
           borderTopColor: theme.colors.borderLight,
-          paddingBottom: 8,
-          paddingTop: 8,
-          height: 80,
+          paddingBottom: 12,
+          paddingTop: 12,
+          height: 88,
+          borderTopWidth: 0,
+          ...theme.shadows.lg,
         },
         tabBarLabelStyle: {
-          fontSize: 12,
-          fontWeight: '500',
+          fontSize: 11,
+          fontWeight: '600',
+          marginTop: 4,
         },
         headerShown: false,
       }}
@@ -58,7 +61,7 @@ function MainTabs() {
         component={HomeScreen}
         options={{
           title: 'Home',
-          tabBarIcon: ({ color }) => <span style={{ fontSize: 20, color }}>🏠</span>,
+          tabBarIcon: ({ color }) => <span style={{ fontSize: 22, color }}>🏠</span>,
         }}
       />
       <Tab.Screen 
@@ -66,7 +69,7 @@ function MainTabs() {
         component={HealthDashboardScreen}
         options={{
           title: 'Health',
-          tabBarIcon: ({ color }) => <span style={{ fontSize: 20, color }}>💚</span>,
+          tabBarIcon: ({ color }) => <span style={{ fontSize: 22, color }}>💚</span>,
         }}
       />
       <Tab.Screen 
@@ -74,7 +77,7 @@ function MainTabs() {
         component={RPMTrendsScreen}
         options={{
           title: 'Trends',
-          tabBarIcon: ({ color }) => <span style={{ fontSize: 20, color }}>📊</span>,
+          tabBarIcon: ({ color }) => <span style={{ fontSize: 22, color }}>📊</span>,
         }}
       />
       <Tab.Screen 
@@ -82,7 +85,7 @@ function MainTabs() {
         component={DevicesScreen}
         options={{
           title: 'Devices',
-          tabBarIcon: ({ color }) => <span style={{ fontSize: 20, color }}>📱</span>,
+          tabBarIcon: ({ color }) => <span style={{ fontSize: 22, color }}>📱</span>,
         }}
       />
       <Tab.Screen 
@@ -90,7 +93,7 @@ function MainTabs() {
         component={MessagingScreen}
         options={{
           title: 'Messages',
-          tabBarIcon: ({ color }) => <span style={{ fontSize: 20, color }}>💬</span>,
+          tabBarIcon: ({ color }) => <span style={{ fontSize: 22, color }}>💬</span>,
         }}
       />
       <Tab.Screen 
@@ -98,7 +101,7 @@ function MainTabs() {
         component={ProfileScreen}
         options={{
           title: 'Profile',
-          tabBarIcon: ({ color }) => <span style={{ fontSize: 20, color }}>👤</span>,
+          tabBarIcon: ({ color }) => <span style={{ fontSize: 22, color }}>👤</span>,
         }}
       />
     </Tab.Navigator>
