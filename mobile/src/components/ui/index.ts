@@ -25,3 +25,9 @@ export { SlideInCard } from './SlideInCard';
 export { LoadingSpinner } from './LoadingSpinner';
 export { ProgressBar } from './ProgressBar';
 export { PulseAnimation } from './PulseAnimation';
+
+// Additional UI components
+export { Avatar } from './Avatar';
+export { Badge } from './Badge';
+export { Modal } from './Modal';
+export { Tabs } from './Tabs';

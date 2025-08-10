@@ -1,311 +1,253 @@
-import React, { useEffect, useState } from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { View, Text, StatusBar } from 'react-native';
+import React from 'react';
+import { 
+  View, 
+  ScrollView, 
+  StyleSheet, 
+  TouchableOpacity,
+  Dimensions 
+} from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { theme } from '../../theme';
+import { 
+  Heading1, 
+  Heading3, 
+  BodyText, 
+  Caption 
+} from '../../components/ui/Typography';
+import { Card } from '../../components/ui/Card';
+import { Badge } from '../../components/ui/Badge';
+import { FadeInView } from '../../components/ui/FadeInView';
+import { SlideInCard } from '../../components/ui/SlideInCard';
 
-// Screens
-import RPMOnboardingScreen from './src/screens/RPM/RPMOnboardingScreen';
-import RPMCalendarScreen from './src/screens/RPM/RPMCalendarScreen';
-import RPMTrendsScreen from './src/screens/RPM/RPMTrendsScreen';
-import CCMOnboardingScreen from './src/screens/CCM/CCMOnboardingScreen';
-import CCMCarePlanScreen from './src/screens/CCM/CCMCarePlanScreen';
-import LoginScreen from './src/screens/Auth/LoginScreen';
-import RegisterScreen from './src/screens/Auth/RegisterScreen';
-import ManualEntryScreen from './src/screens/Monitoring/ManualEntryScreen';
-import EducationScreen from './src/screens/Engagement/EducationScreen';
-import MessagingScreen from './src/screens/Communication/MessagingScreen';
-import DevicesScreen from './src/screens/Devices/DevicesScreen';
-import HomeScreen from './src/screens/Home/HomeScreen';
+const { width } = Dimensions.get('window');
 
-// Services
-import { getAuthState } from './src/services/auth.service';
-import { notificationsService } from './src/services/notifications.service';
-import * as Notifications from 'expo-notifications';
+export default function EducationScreen() {
+  const categories = [
+    { id: 'all', title: 'All Topics', count: 24, active: true },
+    { id: 'hypertension', title: 'Hypertension', count: 8, active: false },
+    { id: 'diabetes', title: 'Diabetes', count: 6, active: false },
+    { id: 'nutrition', title: 'Nutrition', count: 5, active: false },
+    { id: 'exercise', title: 'Exercise', count: 5, active: false },
+  ];
 
-// Theme
-import { theme } from './src/theme';
+  const articles = [
+    {
+      id: '1',
+      title: 'Understanding Blood Pressure Readings',
+      summary: 'Learn what your blood pressure numbers mean and when to be concerned.',
+      category: 'Hypertension',
+      readTime: '5 min read',
+      image: '🩺',
+      difficulty: 'Beginner',
+      featured: true,
+    },
+    {
+      id: '2',
+      title: 'Heart-Healthy Diet Guidelines',
+      summary: 'Discover foods that support cardiovascular health and reduce risk factors.',
+      category: 'Nutrition',
+      readTime: '8 min read',
+      image: '🥗',
+      difficulty: 'Beginner',
+      featured: false,
+    },
+    {
+      id: '3',
+      title: 'Managing Diabetes with Technology',
+      summary: 'How continuous glucose monitors and apps can improve diabetes management.',
+      category: 'Diabetes',
+      readTime: '6 min read',
+      image: '📱',
+      difficulty: 'Intermediate',
+      featured: true,
+    },
+    {
+      id: '4',
+      title: 'Safe Exercise for Heart Patients',
+      summary: 'Guidelines for staying active while managing cardiovascular conditions.',
+      category: 'Exercise',
+      readTime: '7 min read',
+      image: '🏃‍♀️',
+      difficulty: 'Intermediate',
+      featured: false,
+    },
+    {
+      id: '5',
+      title: 'Medication Adherence Tips',
+      summary: 'Strategies to help you remember and properly take your medications.',
+      category: 'General',
+      readTime: '4 min read',
+      image: '💊',
+      difficulty: 'Beginner',
+      featured: false,
+    },
+    {
+      id: '6',
+      title: 'Stress Management Techniques',
+      summary: 'Evidence-based methods to reduce stress and improve heart health.',
+      category: 'Wellness',
+      readTime: '10 min read',
+      image: '🧘‍♀️',
+      difficulty: 'Beginner',
+      featured: false,
+    },
+  ];
 
-const Stack = createNativeStackNavigator();
-const Tab = createBottomTabNavigator();
-
-// Enhanced Tab Navigator with better icons and styling
-function MainTabNavigator() {
-  return (
-    <Tab.Navigator
-      screenOptions={{
-        tabBarActiveTintColor: theme.colors.primary,
-        tabBarInactiveTintColor: theme.colors.textSecondary,
-        tabBarStyle: {
-          backgroundColor: theme.colors.surface,
-          borderTopWidth: 1,
-          borderTopColor: theme.colors.borderLight,
-          paddingBottom: 8,
-          paddingTop: 8,
-          height: 68,
-          ...theme.shadows.lg,
-        },
-        tabBarLabelStyle: {
-          fontSize: theme.typography.fontSizes.xs,
-          fontWeight: theme.typography.fontWeights.medium,
-          marginTop: 4,
-        },
-        headerShown: false,
-        tabBarHideOnKeyboard: true,
-      }}
-    >
-      <Tab.Screen 
-        name="HomeTab" 
-        component={HomeScreen}
-        options={{
-          title: 'Home',
-          tabBarIcon: ({ color, focused }) => (
-            <View style={{
-              backgroundColor: focused ? `${color}15` : 'transparent',
-              borderRadius: 12,
-              padding: 8,
-              minWidth: 40,
-              alignItems: 'center',
-            }}>
-              <Text style={{ fontSize: 20, color }}>🏠</Text>
-            </View>
-          ),
-        }}
-      />
-      <Tab.Screen 
-        name="TrendsTab" 
-        component={RPMTrendsScreen}
-        options={{
-          title: 'Trends',
-          tabBarIcon: ({ color, focused }) => (
-            <View style={{
-              backgroundColor: focused ? `${color}15` : 'transparent',
-              borderRadius: 12,
-              padding: 8,
-              minWidth: 40,
-              alignItems: 'center',
-            }}>
-              <Text style={{ fontSize: 20, color }}>📊</Text>
-            </View>
-          ),
-        }}
-      />
-      <Tab.Screen 
-        name="DevicesTab" 
-        component={DevicesScreen}
-        options={{
-          title: 'Devices',
-          tabBarIcon: ({ color, focused }) => (
-            <View style={{
-              backgroundColor: focused ? `${color}15` : 'transparent',
-              borderRadius: 12,
-              padding: 8,
-              minWidth: 40,
-              alignItems: 'center',
-            }}>
-              <Text style={{ fontSize: 20, color }}>📱</Text>
-            </View>
-          ),
-        }}
-      />
-      <Tab.Screen 
-        name="MessagingTab" 
-        component={MessagingScreen}
-        options={{
-          title: 'Messages',
-          tabBarIcon: ({ color, focused }) => (
-            <View style={{
-              backgroundColor: focused ? `${color}15` : 'transparent',
-              borderRadius: 12,
-              padding: 8,
-              minWidth: 40,
-              alignItems: 'center',
-            }}>
-              <Text style={{ fontSize: 20, color }}>💬</Text>
-            </View>
-          ),
-        }}
-      />
-    </Tab.Navigator>
-  );
-}
-
-function LoadingScreen() {
-  return (
-    <View style={{ 
-      flex: 1, 
-      alignItems: 'center', 
-      justifyContent: 'center',
-      backgroundColor: theme.colors.background,
-    }}>
-      <View style={{
-        width: 80,
-        height: 80,
-        borderRadius: 20,
-        backgroundColor: theme.colors.surface,
-        alignItems: 'center',
-        justifyContent: 'center',
-        marginBottom: 24,
-        ...theme.shadows.lg,
-      }}>
-        <Text style={{ fontSize: 32 }}>🏥</Text>
-      </View>
-      <Text style={{ 
-        fontSize: theme.typography.fontSizes.lg,
-        color: theme.colors.text,
-        fontWeight: theme.typography.fontWeights.medium,
-      }}>
-        Loading Telecheck...
-      </Text>
-    </View>
-  );
-}
-
-export default function App() {
-  const [initialRoute, setInitialRoute] = useState<string | null>(null);
-  const [notificationListener, setNotificationListener] = useState<Notifications.Subscription>();
-  const [responseListener, setResponseListener] = useState<Notifications.Subscription>();
-
-  useEffect(() => {
-    // Set status bar style
-    StatusBar.setBarStyle('dark-content', true);
-    
-    (async () => {
-      try {
-        const { token } = await getAuthState();
-        setInitialRoute(token ? 'Home' : 'Login');
-        
-        // Setup push notifications if user is authenticated
-        if (token) {
-          const pushToken = await notificationsService.registerForPushNotifications();
-          if (pushToken) {
-            await notificationsService.sendTokenToServer(pushToken);
-          }
-        }
-      } catch (error) {
-        console.error('Error during app initialization:', error);
-        setInitialRoute('Login'); // Default to login screen
-      }
-    })();
-
-    // Setup notification listeners with error handling
-    try {
-      const notifListener = notificationsService.addNotificationReceivedListener(notification => {
-        console.log('Notification received:', notification);
-      });
-
-      const responseListenerRef = notificationsService.addNotificationResponseReceivedListener(response => {
-        console.log('Notification response:', response);
-        // Handle notification tap - navigate to relevant screen
-      });
-
-      setNotificationListener(notifListener);
-      setResponseListener(responseListenerRef);
-    } catch (error) {
-      console.error('Error setting up notification listeners:', error);
+  const getDifficultyColor = (difficulty: string) => {
+    switch (difficulty) {
+      case 'Beginner': return 'success';
+      case 'Intermediate': return 'warning';
+      case 'Advanced': return 'error';
+      default: return 'default';
     }
-
-    return () => {
-      if (notificationListener) {
-        notificationsService.removeNotificationSubscription(notificationListener);
-      }
-      if (responseListener) {
-        notificationsService.removeNotificationSubscription(responseListener);
-      }
-    };
-  }, []);
-
-  if (!initialRoute) return <LoadingScreen />;
+  };
 
   return (
-    <NavigationContainer
-      theme={{
-        dark: false,
-        colors: {
-          primary: theme.colors.primary,
-          background: theme.colors.background,
-          card: theme.colors.surface,
-          text: theme.colors.text,
-          border: theme.colors.border,
-          notification: theme.colors.error,
-        },
-      }}
-    >
-      <Stack.Navigator 
-        initialRouteName={initialRoute}
-        screenOptions={{
-          headerStyle: {
-            backgroundColor: theme.colors.surface,
-            elevation: 0,
-            shadowOpacity: 0,
-            borderBottomWidth: 1,
-            borderBottomColor: theme.colors.borderLight,
-          },
-          headerTintColor: theme.colors.primary,
-          headerTitleStyle: {
-            fontWeight: theme.typography.fontWeights.semibold,
-            fontSize: theme.typography.fontSizes.lg,
-            color: theme.colors.text,
-          },
-          headerBackTitleVisible: false,
-          animation: 'slide_from_right',
-        }}
-      >
-        <Stack.Screen 
-          name="Login" 
-          component={LoginScreen}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen 
-          name="Register" 
-          component={RegisterScreen}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen 
-          name="Home" 
-          component={MainTabNavigator}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen 
-          name="RPMOnboarding" 
-          component={RPMOnboardingScreen}
-          options={{ 
-            title: 'RPM Setup',
-            presentation: 'modal',
-          }}
-        />
-        <Stack.Screen 
-          name="RPMCalendar" 
-          component={RPMCalendarScreen}
-          options={{ title: 'Health Calendar' }}
-        />
-        <Stack.Screen 
-          name="CCMOnboarding" 
-          component={CCMOnboardingScreen}
-          options={{ 
-            title: 'Care Management',
-            presentation: 'modal',
-          }}
-        />
-        <Stack.Screen 
-          name="CCMCarePlan" 
-          component={CCMCarePlanScreen}
-          options={{ title: 'Your Care Plan' }}
-        />
-        <Stack.Screen 
-          name="ManualEntry" 
-          component={ManualEntryScreen}
-          options={{ 
-            title: 'Record Vitals',
-            presentation: 'modal',
-          }}
-        />
-        <Stack.Screen 
-          name="Education" 
-          component={EducationScreen}
-          options={{ title: 'Health Education' }}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <SafeAreaView style={styles.container}>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        {/* Header */}
+        <FadeInView delay={100} direction="down">
+          <View style={styles.header}>
+            <Heading1>Health Education</Heading1>
+            <BodyText color={theme.colors.textSecondary} style={styles.subtitle}>
+              Evidence-based content to support your health journey
+            </BodyText>
+          </View>
+        </FadeInView>
+
+        {/* Categories */}
+        <FadeInView delay={300} direction="left">
+          <View style={styles.categoriesSection}>
+            <ScrollView 
+              horizontal 
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={styles.categoriesContainer}
+            >
+              {categories.map((category, index) => (
+                <TouchableOpacity
+                  key={category.id}
+                  style={[
+                    styles.categoryChip,
+                    category.active && styles.categoryChipActive
+                  ]}
+                >
+                  <BodyText 
+                    color={category.active ? theme.colors.surface : theme.colors.textSecondary}
+                    weight="medium"
+                  >
+                    {category.title}
+                  </BodyText>
+                  <Caption 
+                    color={category.active ? theme.colors.surface : theme.colors.textTertiary}
+                    style={styles.categoryCount}
+                  >
+                    {category.count}
+                  </Caption>
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+          </View>
+        </FadeInView>
+
+        {/* Featured Articles */}
+        <FadeInView delay={500} direction="up">
+          <View style={styles.section}>
+            <Heading3 style={styles.sectionTitle}>Featured Articles</Heading3>
+            <ScrollView 
+              horizontal 
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={styles.featuredContainer}
+            >
+              {articles.filter(article => article.featured).map((article, index) => (
+                <SlideInCard
+                  key={article.id}
+                  delay={600 + index * 100}
+                  direction="left"
+                  style={styles.featuredCard}
+                >
+                  <TouchableOpacity style={styles.featuredContent}>
+                    <View style={styles.featuredImage}>
+                      <BodyText style={styles.featuredEmoji}>{article.image}</BodyText>
+                    </View>
+                    <View style={styles.featuredInfo}>
+                      <Badge 
+                        variant={getDifficultyColor(article.difficulty) as any}
+                        size="sm"
+                        style={styles.difficultyBadge}
+                      >
+                        {article.difficulty}
+                      </Badge>
+                      <Heading3 style={styles.featuredTitle} numberOfLines={2}>
+                        {article.title}
+                      </Heading3>
+                      <BodyText 
+                        color={theme.colors.textSecondary} 
+                        style={styles.featuredSummary}
+                        numberOfLines={3}
+                      >
+                        {article.summary}
+                      </BodyText>
+                      <View style={styles.featuredMeta}>
+                        <Caption color={theme.colors.textTertiary}>
+                          {article.category} • {article.readTime}
+                        </Caption>
+                      </View>
+                    </View>
+                  </TouchableOpacity>
+                </SlideInCard>
+              ))}
+            </ScrollView>
+          </View>
+        </FadeInView>
+
+        {/* All Articles */}
+        <FadeInView delay={800} direction="up">
+          <View style={[styles.section, styles.lastSection]}>
+            <Heading3 style={styles.sectionTitle}>All Articles</Heading3>
+            {articles.map((article, index) => (
+              <SlideInCard
+                key={article.id}
+                delay={900 + index * 50}
+                direction="left"
+                style={styles.articleCard}
+              >
+                <TouchableOpacity style={styles.articleContent}>
+                  <View style={styles.articleImage}>
+                    <BodyText>{article.image}</BodyText>
+                  </View>
+                  <View style={styles.articleInfo}>
+                    <View style={styles.articleHeader}>
+                      <BodyText style={styles.articleTitle} numberOfLines={2}>
+                        {article.title}
+                      </BodyText>
+                      <Badge 
+                        variant={getDifficultyColor(article.difficulty) as any}
+                        size="sm"
+                      >
+                        {article.difficulty}
+                      </Badge>
+                    </View>
+                    <BodyText 
+                      color={theme.colors.textSecondary} 
+                      style={styles.articleSummary}
+                      numberOfLines={2}
+                    >
+                      {article.summary}
+                    </BodyText>
+                    <View style={styles.articleMeta}>
+                      <Caption color={theme.colors.textTertiary}>
+                        {article.category} • {article.readTime}
+                      </Caption>
+                    </View>
+                  </View>
+                  <View style={styles.articleArrow}>
+                    <BodyText color={theme.colors.textTertiary}>→</BodyText>
+                  </View>
+                </TouchableOpacity>
+              </SlideInCard>
+            ))}
+          </View>
   );
 }
+
+

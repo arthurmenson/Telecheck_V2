@@ -104,6 +104,13 @@ export default function HomeScreen({ navigation }: any) {
       color: theme.colors.success,
       onPress: () => navigation.navigate('DevicesTab'),
     },
+    {
+      title: 'Notifications',
+      subtitle: 'View alerts',
+      icon: '🔔',
+      color: theme.colors.warning,
+      onPress: () => navigation.navigate('Notifications'),
+    },
   ];
 
   const getGreeting = () => {
