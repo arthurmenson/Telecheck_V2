@@ -23,7 +23,9 @@ import RPMOnboardingScreen from './src/screens/RPM/RPMOnboardingScreen';
 import RPMCalendarScreen from './src/screens/RPM/RPMCalendarScreen';
 import CCMOnboardingScreen from './src/screens/CCM/CCMOnboardingScreen';
 import CCMCarePlanScreen from './src/screens/CCM/CCMCarePlanScreen';
-import EducationScreen from './src/screens/Engagement/EducationScreen';
+import EducationScreen from './src/screens/Education/EducationScreen';
+import EmergencyScreen from './src/screens/Emergency/EmergencyScreen';
+import ReportsScreen from './src/screens/Reports/ReportsScreen';
 
 import { theme } from './src/theme';
 
@@ -151,6 +153,16 @@ export default function App() {
           <Stack.Screen 
             name="Education" 
             component={EducationScreen}
+            options={{ presentation: 'modal' }}
+          />
+          <Stack.Screen 
+            name="Emergency" 
+            component={EmergencyScreen}
+            options={{ presentation: 'modal' }}
+          />
+          <Stack.Screen 
+            name="Reports" 
+            component={ReportsScreen}
             options={{ presentation: 'modal' }}
           />
           
