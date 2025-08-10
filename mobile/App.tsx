@@ -159,5 +159,7 @@ export default function App() {
           options={{ presentation: 'modal' }}
         />
         <Stack.Screen 
+  )
+}
 
 
