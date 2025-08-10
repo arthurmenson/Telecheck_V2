@@ -247,7 +247,12 @@ export default function EducationScreen() {
               </SlideInCard>
             ))}
           </View>
+        </FadeInView>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({});
 
 
