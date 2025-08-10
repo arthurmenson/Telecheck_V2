@@ -3,6 +3,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { StatusBar } from 'expo-status-bar';
+import { AuthProvider } from './src/screens/Auth/AuthContext';
 
 // Import screens
 import LoginScreen from './src/screens/Auth/LoginScreen';
@@ -105,61 +106,77 @@ function MainTabs() {
 // Main App Navigator
 export default function App() {
   return (
-    <NavigationContainer>
-      <StatusBar style="dark" />
-      <Stack.Navigator
-        initialRouteName="Login"
-        screenOptions={{
-          headerShown: false,
-        }}
-      >
-        {/* Auth Screens */}
-        <Stack.Screen name="Login" component={LoginScreen} />
-        <Stack.Screen name="Register" component={RegisterScreen} />
-        
-        {/* Main App */}
-        <Stack.Screen name="Home" component={MainTabs} />
-        
-        {/* Modal Screens */}
-        <Stack.Screen 
-          name="Settings" 
-          component={SettingsScreen}
-          options={{ presentation: 'modal' }}
-        />
-        <Stack.Screen 
-          name="Notifications" 
-          component={NotificationsScreen}
-          options={{ presentation: 'modal' }}
-        />
-        <Stack.Screen 
-          name="ManualEntry" 
-          component={ManualEntryScreen}
-          options={{ presentation: 'modal' }}
-        />
-        <Stack.Screen 
-          name="Medications" 
-          component={MedicationsScreen}
-          options={{ presentation: 'modal' }}
-        />
-        <Stack.Screen 
-          name="Appointments" 
-          component={AppointmentsScreen}
-          options={{ presentation: 'modal' }}
-        />
-        <Stack.Screen 
-          name="Education" 
-          component={EducationScreen}
-          options={{ presentation: 'modal' }}
-        />
-        
-        {/* RPM Screens */}
-        <Stack.Screen 
-          name="RPMOnboarding" 
-          component={RPMOnboardingScreen}
-          options={{ presentation: 'modal' }}
-        />
-        <Stack.Screen 
-  )
-}
-
-
+    <AuthProvider>
+      <NavigationContainer>
+        <StatusBar style="dark" />
+        <Stack.Navigator
+          initialRouteName="Login"
+          screenOptions={{
+            headerShown: false,
+          }}
+        >
+          {/* Auth Screens */}
+          <Stack.Screen name="Login" component={LoginScreen} />
+          <Stack.Screen name="Register" component={RegisterScreen} />
+          
+          {/* Main App */}
+          <Stack.Screen name="Home" component={MainTabs} />
+          
+          {/* Modal Screens */}
+          <Stack.Screen 
+            name="Settings" 
+            component={SettingsScreen}
+            options={{ presentation: 'modal' }}
+          />
+          <Stack.Screen 
+            name="Notifications" 
+            component={NotificationsScreen}
+            options={{ presentation: 'modal' }}
+          />
+          <Stack.Screen 
+            name="ManualEntry" 
+            component={ManualEntryScreen}
+            options={{ presentation: 'modal' }}
+          />
+          <Stack.Screen 
+            name="Medications" 
+            component={MedicationsScreen}
+            options={{ presentation: 'modal' }}
+          />
+          <Stack.Screen 
+            name="Appointments" 
+            component={AppointmentsScreen}
+            options={{ presentation: 'modal' }}
+          />
+          <Stack.Screen 
+            name="Education" 
+            component={EducationScreen}
+            options={{ presentation: 'modal' }}
+          />
+          
+          {/* RPM Screens */}
+          <Stack.Screen 
+            name="RPMOnboarding" 
+            component={RPMOnboardingScreen}
+            options={{ presentation: 'modal' }}
+          />
+          <Stack.Screen 
+            name="RPMCalendar" 
+            component={RPMCalendarScreen}
+            options={{ presentation: 'modal' }}
+          />
+          
+          {/* CCM Screens */}
+          <Stack.Screen 
+            name="CCMOnboarding" 
+            component={CCMOnboardingScreen}
+            options={{ presentation: 'modal' }}
+          />
+          <Stack.Screen 
+            name="CCMCarePlan" 
+            component={CCMCarePlanScreen}
+            options={{ presentation: 'modal' }}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </AuthProvider>

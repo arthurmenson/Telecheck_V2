@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, Alert, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useAuth } from './AuthContext';
 import { theme } from '../../theme';
 import { StatusBar } from '../../components/ui/StatusBar';
 import { Heading1, BodyText, Caption } from '../../components/ui/Typography';
@@ -16,8 +17,8 @@ export default function RegisterScreen({ navigation }: any) {
     password: '',
     confirmPassword: '',
   });
-  const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<{[key: string]: string}>({});
+  const { register, isLoading } = useAuth();
   
   const validateForm = () => {
     const newErrors: {[key: string]: string} = {};
@@ -55,19 +56,10 @@ export default function RegisterScreen({ navigation }: any) {
   const handleRegister = async () => {
     if (!validateForm()) return;
     
-    setLoading(true);
-    
-    // Simulate API call
-    setTimeout(() => {
-      setLoading(false);
-      Alert.alert(
-        'Welcome to Telecheck!', 
-        'Your account has been created successfully', 
-        [
-          { text: 'Get Started', onPress: () => navigation.replace('Home') }
-        ]
-      );
-    }, 2000);
+    const success = await register(formData.firstName + ' ' + formData.lastName, formData.email, formData.password);
+    if (success) {
+      navigation.replace('Home');
+    }
   };
 
   const updateField = (field: string, value: string) => {
@@ -175,7 +167,7 @@ export default function RegisterScreen({ navigation }: any) {
               <Button
                 title="Create Account"
                 onPress={handleRegister}
-                loading={loading}
+                loading={isLoading}
                 fullWidth
                 style={styles.registerButton}
               />

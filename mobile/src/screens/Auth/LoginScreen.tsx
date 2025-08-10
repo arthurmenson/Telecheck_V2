@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, Alert, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useAuth } from './AuthContext';
 import { theme } from '../../theme';
 import { StatusBar } from '../../components/ui/StatusBar';
 import { Heading1, Heading3, BodyText, Caption } from '../../components/ui/Typography';
@@ -11,8 +12,8 @@ import { FadeInView } from '../../components/ui/FadeInView';
 export default function LoginScreen({ navigation }: any) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<{email?: string; password?: string}>({});
+  const { login, isLoading } = useAuth();
   
   const validateForm = () => {
     const newErrors: {email?: string; password?: string} = {};
@@ -36,15 +37,10 @@ export default function LoginScreen({ navigation }: any) {
   const handleLogin = async () => {
     if (!validateForm()) return;
     
-    setLoading(true);
-    
-    // Simulate API call
-    setTimeout(() => {
-      setLoading(false);
-      Alert.alert('Welcome Back!', 'Login successful', [
-        { text: 'Continue', onPress: () => navigation.replace('Home') }
-      ]);
-    }, 1500);
+    const success = await login(email, password);
+    if (success) {
+      navigation.replace('Home');
+    }
   };
 
   return (
@@ -115,7 +111,7 @@ export default function LoginScreen({ navigation }: any) {
               <Button
                 title="Sign In"
                 onPress={handleLogin}
-                loading={loading}
+                loading={isLoading}
                 fullWidth
                 style={styles.loginButton}
               />

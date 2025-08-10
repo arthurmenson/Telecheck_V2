@@ -8,6 +8,7 @@ import {
   Switch 
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useAuth } from '../Auth/AuthContext';
 import { theme } from '../../theme';
 import { 
   Heading1, 
@@ -23,9 +24,8 @@ import { FadeInView } from '../../components/ui/FadeInView';
 import { SlideInCard } from '../../components/ui/SlideInCard';
 
 export default function ProfileScreen({ navigation }: any) {
-  const [user] = useState({
-    name: 'Sarah Johnson',
-    email: 'sarah.johnson@email.com',
+  const { user, logout } = useAuth();
+  const [userDetails] = useState({
     phone: '+1 (555) 123-4567',
     dateOfBirth: 'March 15, 1985',
     emergencyContact: {
@@ -56,7 +56,10 @@ export default function ProfileScreen({ navigation }: any) {
         { 
           text: 'Sign Out', 
           style: 'destructive',
-          onPress: () => navigation.replace('Login')
+          onPress: async () => {
+            await logout();
+            navigation.replace('Login');
+          }
         }
       ]
     );
@@ -66,18 +69,18 @@ export default function ProfileScreen({ navigation }: any) {
     {
       title: 'Personal Information',
       items: [
-        { label: 'Full Name', value: user.name, icon: '👤' },
-        { label: 'Email', value: user.email, icon: '📧' },
-        { label: 'Phone', value: user.phone, icon: '📱' },
-        { label: 'Date of Birth', value: user.dateOfBirth, icon: '🎂' },
+        { label: 'Full Name', value: user?.name || 'N/A', icon: '👤' },
+        { label: 'Email', value: user?.email || 'N/A', icon: '📧' },
+        { label: 'Phone', value: userDetails.phone, icon: '📱' },
+        { label: 'Date of Birth', value: userDetails.dateOfBirth, icon: '🎂' },
       ]
     },
     {
       title: 'Emergency Contact',
       items: [
-        { label: 'Name', value: user.emergencyContact.name, icon: '🚨' },
-        { label: 'Phone', value: user.emergencyContact.phone, icon: '📞' },
-        { label: 'Relationship', value: user.emergencyContact.relationship, icon: '👥' },
+        { label: 'Name', value: userDetails.emergencyContact.name, icon: '🚨' },
+        { label: 'Phone', value: userDetails.emergencyContact.phone, icon: '📞' },
+        { label: 'Relationship', value: userDetails.emergencyContact.relationship, icon: '👥' },
       ]
     }
   ];
@@ -91,14 +94,14 @@ export default function ProfileScreen({ navigation }: any) {
             <View style={styles.profileInfo}>
               <Avatar 
                 size="xl" 
-                name={user.name}
+                name={user?.name}
                 showBadge
                 badgeColor={theme.colors.success}
               />
               <View style={styles.userInfo}>
-                <Heading1 style={styles.userName}>{user.name}</Heading1>
+                <Heading1 style={styles.userName}>{user?.name}</Heading1>
                 <BodyText color={theme.colors.textSecondary}>
-                  {user.email}
+                  {user?.email}
                 </BodyText>
                 <View style={styles.badges}>
                   <Badge variant="success" size="sm">Active Patient</Badge>

@@ -8,6 +8,7 @@ import {
   RefreshControl,
   Dimensions 
 } from 'react-native';
+import { useAuth } from '../Auth/AuthContext';
 
 import { theme } from '../../theme';
 import { Card } from '../../components/ui/Card';
@@ -21,8 +22,10 @@ const { width } = Dimensions.get('window');
 
 export default function HomeScreen({ navigation }: any) {
   const [refreshing, setRefreshing] = useState(false);
-  const [userName] = useState('Sarah'); // Would come from auth context
   const [currentTime, setCurrentTime] = useState(new Date());
+  const { user } = useAuth();
+  
+  const userName = user?.name?.split(' ')[0] || 'User';
   
   const [recentMetrics] = useState([
     {
@@ -167,9 +170,14 @@ export default function HomeScreen({ navigation }: any) {
                   {getGreeting()}, {userName}! 👋
                 </Heading1>
               </View>
-              <TouchableOpacity style={styles.profileButton}>
+              <TouchableOpacity 
+                style={styles.profileButton}
+                onPress={() => navigation.navigate('ProfileTab')}
+              >
                 <View style={styles.avatar}>
-                  <Typography variant="h4">👩‍⚕️</Typography>
+                  <Typography variant="h4">
+                    {user?.avatar || '👩‍⚕️'}
+                  </Typography>
                 </View>
               </TouchableOpacity>
             </View>
